@@ -4,12 +4,13 @@ const {
     createUser,
     updateUser,
     getMe,
-    login
+    login,
+    deleteUser
 } = require('../../dao');
 
 router.route('/').post(createUser).put(authMiddleware, updateUser).get(getMe).delete(deleteUser);
 
-router.route('/salaries').get(authMiddleware, getSalaries);
+// router.route('/salaries').get(authMiddleware, getSalaries);
 
 router.route('/login').post(login);
 
