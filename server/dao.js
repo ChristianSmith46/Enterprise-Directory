@@ -1,13 +1,15 @@
 
-
-export function createUser(req, res) {
-    res.send({ error: "Requires Completion" })
-}
-
-export function updateUser(req, res) {
-    res.send({ error: "Requires Completion" })
-}
-
-export function login(req, res) {
-    res.send({ error: "Requires completion" })
-}
+module.exports = {
+    createUser: (req, res) => {
+        res.send({ error: "Requires Completion" })
+    },
+    updateUser: (req, res) => {
+        res.send({ error: "Requires Completion" })
+    },
+    getMe: (req, res) => {
+        res.send({ error: "Requires Completion" })
+    },
+    login: (req, res) => {
+        res.send({ error: "Requires Completion" })
+    },
+};
