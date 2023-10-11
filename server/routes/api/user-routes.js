@@ -5,12 +5,15 @@ const {
     updateUser,
     getMe,
     login,
-    deleteUser
+    deleteUser,
+    getDirectReports,
+    getOneDirectRport
 } = require('../../dao');
 
 router.route('/').post(createUser).put(authMiddleware, updateUser).delete(deleteUser);
 router.route('/me').get(authMiddleware, getMe);
-// router.route('/salaries').get(authMiddleware, getSalaries);
+router.route('/salaries').get(authMiddleware, getDirectReports);
+router.route('/salaries/:employeeID').get(authMiddleware, getOneDirectRport);
 
 router.route('/login').post(login);
 
