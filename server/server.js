@@ -1,6 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const router = require("./routes");
+const routes = require("./routes");
 
 const port = process.env.PORT || 3000;
 const connectionString = process.env.MONGO_STRING || "mongodb+srv://hackathon:0l7bgp3FPmaZ9DsA@cluster0.nvcnai8.mongodb.net/?retryWrites=true&w=majority";
@@ -15,7 +15,7 @@ mongoose.connect(
 
 const app = express();
 
-app.use(router)
+app.use(routes)
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);
