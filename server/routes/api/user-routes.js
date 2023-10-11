@@ -8,8 +8,8 @@ const {
     deleteUser
 } = require('../../dao');
 
-router.route('/').post(createUser).put(authMiddleware, updateUser).get(getMe).delete(deleteUser);
-
+router.route('/').post(createUser).put(authMiddleware, updateUser).delete(deleteUser);
+router.route('/me').get(authMiddleware, getMe);
 // router.route('/salaries').get(authMiddleware, getSalaries);
 
 router.route('/login').post(login);

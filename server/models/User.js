@@ -24,6 +24,10 @@ const userSchema = new Schema({
     type: Number,
     required: true,
   },
+  locationID: {
+    type: Number,
+    required: true
+  },
   managerID: {
     type: Number,
   },
