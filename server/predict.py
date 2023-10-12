@@ -5,13 +5,19 @@ import pandas as pd
 
 # Load the pre-trained model
 with open('SalaryPrediction.pkl', 'rb') as f:
-    model = pickle.load(f)
+    model, le_role, le_location = pickle.load(f)
     
 # Read data from stdin
 json_data = sys.stdin.read()
 data = json.loads(json_data)
 
 # Perform the prediction
-df = pd.DataFrame(data, orient='index', columns=['role, salary'])
-predictions = model.predict(df)
-print(predictions)
+new_data = pd.DataFrame({
+    'role': [data.role],
+    'location': [data.location]
+})
+
+new_data['role'] = le_role.transform(new_data['role'])
+new_data['location'] = le_location.transform(new_data['location'])
+
+prediction = model.predict(new_data)
