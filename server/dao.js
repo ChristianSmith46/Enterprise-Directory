@@ -6,8 +6,8 @@ module.exports = {
     createUser: async (req, res) => {
         try {
             console.log(req.body)
-            const { name, email, password, phoneNumber, managerID, roleID, salary, locationID } = req.body;
-            const userData = { name, email, password, phoneNumber, managerID, roleID, salary, locationID };
+            const { name, email, password, phoneNumber, managerID, role, salary, location } = req.body;
+            const userData = { name, email, password, phoneNumber, managerID, role, salary, location };
             const newUser = await User.create(userData);
             const token = signToken({ email, _id: newUser._id });
             res.send({ success: true, _id: newUser._id, token });
@@ -37,10 +37,11 @@ module.exports = {
     login: async (req, res) => {
         try {
             const { email, password } = req.body;
-            // Use bcrypt to check passwords later on
-            const user = await User.findOne({ email, password });
+            const user = await User.findOne({ email });
             console.log(user)
             if (!user) return res.status(400).send({ success: false, error: "email or password invalid" });
+            const isCorrectPassword = await user.isCorrectPassword(password);
+            if (!isCorrectPassword) return res.status(400).send({ success: false, error: "email or password invalid" });
             const token = signToken({ email, _id: user._id });
             res.send({ success: true, email, token });
         } catch (err) {
