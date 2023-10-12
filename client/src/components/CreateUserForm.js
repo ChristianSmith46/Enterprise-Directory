@@ -34,17 +34,17 @@ function CreateUserForm() {
   return (
     <form onSubmit={handleSubmit}>
       <input
-        type="name"
+        type="text"
         value={name}
         onChange={(e) => setName(e.target.value)}
-        placeholder="name"
+        placeholder="Full Name"
         required
       />
       <input
         type="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        placeholder="email"
+        placeholder="Email"
         required
       />
       <input
@@ -55,40 +55,40 @@ function CreateUserForm() {
         required
       />
       <input
-        type="phoneNumber"
+        type="text"
         value={phoneNumber}
         onChange={(e) => setPhoneNumber(e.target.value)}
-        placeholder="phoneNumber"
+        placeholder="Phone Number"
         required
       />
       <input
-        type="managerID"
+        type="text"
         value={managerID}
         onChange={(e) => setManagerID(e.target.value)}
-        placeholder="managerID"
+        placeholder="Manager ID"
         required
       />
       <input
-        type="role"
-        value={role}
-        onChange={(e) => setRole(e.target.value)}
-        placeholder="role"
-        required
-      />
-      <input
-        type="salary"
+        type="text"
         value={salary}
         onChange={(e) => setSalary(e.target.value)}
-        placeholder="salary"
+        placeholder="Salary"
         required
       />
-      <input
-        type="location"
-        value={location}
-        onChange={(e) => setLocation(e.target.value)}
-        placeholder="location"
-        required
-      />
+      <select value={role} onChange={(e) => setRole(e.target.value)}>
+        <option value="">Select Job Role</option>
+        <option value="Manager">Manager</option>
+        <option value="Employee">Employee</option>
+        <option value="Hr">HR</option>
+      </select>
+      <select value={location} onChange={(e) => setLocation(e.target.value)}>
+        <option value="">Select Location</option>
+        <option value="New York City">New York City</option>
+        <option value="Los Angeles">Los Angeles</option>
+        <option value="Chicago">Chicago</option>
+        <option value="Houston">Houston</option>
+        <option value="Phoenix">Phoenix</option>
+      </select>
       <button type="submit">Log in</button>
     </form>
   );
