@@ -58,7 +58,6 @@ module.exports = {
             res.send({ success: true, mongoOutput });
         } catch (err) {
             if (err.name === 'CastError' && err.kind === 'ObjectId') {
-                // Duplicate username
                 return res.status(422).send({ success: false, message: 'Invalid ID Format' });
             }
             console.error(err);
@@ -68,8 +67,7 @@ module.exports = {
     getDirectReports: async (req, res) => {
         try {
             const { _id } = req.user
-            //TODO: Fix managerID once done testing
-            const directReports = await User.find({ managerID: 1 }, { phoneNumber: 0, password: 0, __v: 0, email: 0 });
+            const directReports = await User.find({ managerID: _id }, { phoneNumber: 0, password: 0, __v: 0, email: 0 });
             res.send({ success: true, directReports });
         } catch (err) {
             console.error(err);
@@ -80,10 +78,13 @@ module.exports = {
         try {
             const { _id } = req.user;
             const { employeeID } = req.params;
-            //TODO: Fix managerID once done testing
-            const employee = await User.findOne({ managerID: 1, _id: employeeID }, { phoneNumber: 0, password: 0, __v: 0, email: 0 });
+            const employee = await User.findOne({ managerID: _id, _id: employeeID }, { phoneNumber: 0, password: 0, __v: 0, email: 0 });
+            if(!employee) return res.status(400).send({success: false, error: "No User Found"});
             res.send({ success: true, employee });
         } catch (err) {
+            if (err.name === 'CastError' && err.kind === 'ObjectId') {
+                return res.status(422).send({ success: false, message: 'Invalid ID Format' });
+            }
             console.error(err);
             res.status(500).send({ error: "Server error" });
         }
