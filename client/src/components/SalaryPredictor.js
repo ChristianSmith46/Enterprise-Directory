@@ -7,7 +7,7 @@ function SalaryPredictor() {
 
   const getPredictedSalary = async () => {
     try {
-      const response = await fetch("http://localhost:3000/api/predictsalary", {
+      const response = await fetch("/api/predictsalary", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -40,3 +40,5 @@ function SalaryPredictor() {
     </div>
   );
 }
+
+export default SalaryPredictor;
