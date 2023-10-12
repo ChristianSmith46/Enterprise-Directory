@@ -182,11 +182,11 @@ module.exports = {
     pythonScript.on("close", (code) => {
       if (code === 0) {
         // Parse the predicted data
-        const predictions = JSON.parse(predictionData);
-        console.log({ predictions });
+        const prediction = JSON.parse(predictionData);
+        console.log({ prediction });
 
         // Return the predictions as the response
-        res.send(predictions);
+        res.send({success: true, prediction: prediction[0]});
       } else {
         // Return an error response
         res.status(500).json({ error: "Prediction failed" });
