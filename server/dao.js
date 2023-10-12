@@ -67,7 +67,7 @@ module.exports = {
     getDirectReports: async (req, res) => {
         try {
             const { _id } = req.user
-            const directReports = await User.find({ managerID: _id }, { phoneNumber: 0, password: 0, __v: 0, email: 0 });
+            const directReports = await User.find({ managerID: _id }, { password: 0, __v: 0});
             res.send({ success: true, directReports });
         } catch (err) {
             console.error(err);
