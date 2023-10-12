@@ -29,7 +29,7 @@ const userSchema = new Schema({
     required: true
   },
   managerID: {
-    type: Number,
+    type: String,
   },
   salary: {
     type: Number,

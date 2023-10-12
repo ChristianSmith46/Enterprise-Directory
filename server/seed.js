@@ -2,11 +2,7 @@ const { faker } = require("@faker-js/faker");
 const mongoose = require("mongoose");
 const User = require("./models/User");
 
-const USERS = Array.from({ length: 900 }, createRandomUser);
-
-const Manager = Array.from({ length: 100 }, createRandomManager);
-
-const Hr = Array.from({ length: 20 }, createRandomHr);
+let managerIDs = [];
 
 const connectDB = async () => {
   try {
@@ -14,8 +10,16 @@ const connectDB = async () => {
       "mongodb+srv://hackathon:0l7bgp3FPmaZ9DsA@cluster0.nvcnai8.mongodb.net/?retryWrites=true&w=majority"
     );
     console.log("connected to db");
+
+    const Manager = Array.from({ length: 100 }, createRandomManager);
+    const Hr = Array.from({ length: 20 }, createRandomHr);
+
     const outputManager = await User.create(Manager);
     console.log(outputManager);
+
+    managerIDs = (await User.find({role: "Manager"})).map((user) => user._id.toString());
+    const USERS = Array.from({ length: 900 }, createRandomUser);
+    
     const outputUser = await User.create(USERS);
     console.log(outputUser);
     const outputHr = await User.create(Hr);
@@ -43,6 +47,7 @@ function createRandomUser() {
     "Phoenix",
   ];
   const randomCities = Math.floor(Math.random() * cities.length);
+  const randomManager = Math.floor(Math.random() * managerIDs.length);
   return {
     name: faker.person.fullName(),
     phoneNumber: createRandomPhoneNumber(),
@@ -51,7 +56,7 @@ function createRandomUser() {
     salary: faker.finance.amount(50000, 100000, 0),
     email: faker.internet.email(),
     password: faker.internet.password(),
-    managerID: faker.number.int({ max: 3 }),
+    managerID: managerIDs[randomManager],
   };
 }
 
@@ -94,7 +99,3 @@ function createRandomHr() {
     password: faker.internet.password(),
   };
 }
-
-// console.log(Manager);
-
-module.exports = USERS;
