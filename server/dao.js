@@ -49,14 +49,18 @@ module.exports = {
     },
     deleteUser: async (req, res) => {
         try {
-            // const { role } = req.user;
-            const role = "Hr";
+            const { role } = req.user;
             const { id } = req.params;
             if(!id) return res.status(400).send({success: false, error: "No ID found"});
             if(role !== "Hr") return res.status(400).send({success: false, error: "Higher role required"});
             const mongoOutput = await User.deleteOne({_id: id});
+            if(mongoOutput.deletedCount === 0)return res.status(400).send({success: false, error: "No User Found"});
             res.send({ success: true, mongoOutput });
         } catch (err) {
+            if (err.name === 'CastError' && err.kind === 'ObjectId') {
+                // Duplicate username
+                return res.status(422).send({ success: false, message: 'Invalid ID Format' });
+            }
             console.error(err);
             res.status(500).send({ error: "Server error" });
         }

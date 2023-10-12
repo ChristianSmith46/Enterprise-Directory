@@ -15,7 +15,6 @@ router.route('/me').get(authMiddleware, getMe);
 router.route('/salaries').get(authMiddleware, getDirectReports);
 router.route('/salaries/:employeeID').get(authMiddleware, getOneDirectRport);
 router.route('/login').post(login);
-// TODO: Add auth to delete route
-router.route('/:id').delete(deleteUser);
+router.route('/:id').delete(authMiddleware, deleteUser);
 
 module.exports = router;
