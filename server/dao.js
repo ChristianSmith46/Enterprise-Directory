@@ -1,5 +1,6 @@
 const User = require("./models/User");
 const { signToken } = require("./utils/auth");
+const { spawn } = require('child_process');
 
 
 module.exports = {
@@ -51,10 +52,10 @@ module.exports = {
         try {
             const { role } = req.user;
             const { id } = req.params;
-            if(!id) return res.status(400).send({success: false, error: "No ID found"});
-            if(role !== "Hr") return res.status(400).send({success: false, error: "Higher role required"});
-            const mongoOutput = await User.deleteOne({_id: id});
-            if(mongoOutput.deletedCount === 0)return res.status(400).send({success: false, error: "No User Found"});
+            if (!id) return res.status(400).send({ success: false, error: "No ID found" });
+            if (role !== "Hr") return res.status(400).send({ success: false, error: "Higher role required" });
+            const mongoOutput = await User.deleteOne({ _id: id });
+            if (mongoOutput.deletedCount === 0) return res.status(400).send({ success: false, error: "No User Found" });
             res.send({ success: true, mongoOutput });
         } catch (err) {
             if (err.name === 'CastError' && err.kind === 'ObjectId') {
@@ -67,7 +68,7 @@ module.exports = {
     getDirectReports: async (req, res) => {
         try {
             const { _id } = req.user
-            const directReports = await User.find({ managerID: _id }, { password: 0, __v: 0});
+            const directReports = await User.find({ managerID: _id }, { password: 0, __v: 0 });
             res.send({ success: true, directReports });
         } catch (err) {
             console.error(err);
@@ -79,7 +80,7 @@ module.exports = {
             const { _id } = req.user;
             const { employeeID } = req.params;
             const employee = await User.findOne({ managerID: _id, _id: employeeID }, { phoneNumber: 0, password: 0, __v: 0, email: 0 });
-            if(!employee) return res.status(400).send({success: false, error: "No User Found"});
+            if (!employee) return res.status(400).send({ success: false, error: "No User Found" });
             res.send({ success: true, employee });
         } catch (err) {
             if (err.name === 'CastError' && err.kind === 'ObjectId') {
@@ -94,17 +95,52 @@ module.exports = {
             const { _id, role } = req.user;
             const { name } = req.query;
             let users
-            if(role === "Hr"){
-                users = await User.find({name: {$regex: name, $options: "i"}}, {password: 0, __v: 0});
+            if (role === "Hr") {
+                users = await User.find({ name: { $regex: name, $options: "i" } }, { password: 0, __v: 0 });
             } else if (role === "Manager") {
-                users = await User.find({name: {$regex: name, $options: "i"}, managerID: _id}, {password: 0, __v: 0});
+                users = await User.find({ name: { $regex: name, $options: "i" }, managerID: _id }, { password: 0, __v: 0 });
             } else {
-                return res.status(400).send({success: false, error: "You don't have permission to see other employees"});
+                return res.status(400).send({ success: false, error: "You don't have permission to see other employees" });
             }
             res.send(users);
         } catch (err) {
             console.error(err);
             res.status(500).send({ error: "Server error" });
         }
+    },
+    predictSalary: async (req, res) => {
+        const input = req.body;
+
+        const data = JSON.stringify(input)
+        console.log({ data });
+        // Spawn a child process to execute the predict.py script
+        // The Python binary name might be different on your machine. Just "python" for example.
+        const pythonScript = spawn('python3', ['predict.py']);
+
+        // Send the data to the predict.py script via stdin
+        pythonScript.stdin.write(data);
+        pythonScript.stdin.end();
+
+        let predictionData = '';
+
+        // Collect the predicted data from stdout of the predict.py script
+        pythonScript.stdout.on('data', (data) => {
+            predictionData += data.toString();
+        });
+
+        // Handle the completion of the predict.py script
+        pythonScript.on('close', (code) => {
+            if (code === 0) {
+                // Parse the predicted data
+                const predictions = JSON.parse(predictionData);
+                console.log({ predictions });
+
+                // Return the predictions as the response
+                res.send(predictions);
+            } else {
+                // Return an error response
+                res.status(500).json({ error: 'Prediction failed' });
+            }
+        });
     }
 };
