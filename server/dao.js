@@ -76,13 +76,31 @@ module.exports = {
             res.status(500).send({ error: "Server error" });
         }
     },
-    getOneDirectRport: async (req, res) => {
+    getOneDirectReport: async (req, res) => {
         try {
             const { _id } = req.user;
             const { employeeID } = req.params;
             //TODO: Fix managerID once done testing
             const employee = await User.findOne({ managerID: 1, _id: employeeID }, { phoneNumber: 0, password: 0, __v: 0, email: 0 });
             res.send({ success: true, employee });
+        } catch (err) {
+            console.error(err);
+            res.status(500).send({ error: "Server error" });
+        }
+    },
+    searchBy: async (req, res) => {
+        try {
+            const { _id, role } = req.user;
+            const { name } = req.query;
+            let users
+            if(role === "Hr"){
+                users = await User.find({name: {$regex: name, $options: "i"}}, {password: 0, __v: 0});
+            } else if (role === "Manager") {
+                users = await User.find({name: {$regex: name, $options: "i"}, managerID: _id}, {password: 0, __v: 0});
+            } else {
+                return res.status(400).send({success: false, error: "You don't have permission to see other employees"});
+            }
+            res.send(users);
         } catch (err) {
             console.error(err);
             res.status(500).send({ error: "Server error" });
