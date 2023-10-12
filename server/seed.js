@@ -14,14 +14,16 @@ const connectDB = async () => {
     const Manager = Array.from({ length: 100 }, createRandomManager);
     const Hr = Array.from({ length: 20 }, createRandomHr);
 
-    const outputManager = await User.create(Manager);
-    console.log(outputManager);
+    // const outputManager = await User.create(Manager);
+    // console.log(outputManager);
 
-    managerIDs = (await User.find({role: "Manager"})).map((user) => user._id.toString());
-    const USERS = Array.from({ length: 900 }, createRandomUser);
-    
-    const outputUser = await User.create(USERS);
-    console.log(outputUser);
+    // managerIDs = (await User.find({ role: "Manager" })).map((user) =>
+    //   user._id.toString()
+    // );
+    // const USERS = Array.from({ length: 900 }, createRandomUser);
+
+    // const outputUser = await User.create(USERS);
+    // console.log(outputUser);
     const outputHr = await User.create(Hr);
     console.log(outputHr);
   } catch (error) {
@@ -48,12 +50,13 @@ function createRandomUser() {
   ];
   const randomCities = Math.floor(Math.random() * cities.length);
   const randomManager = Math.floor(Math.random() * managerIDs.length);
+  const salaries = [1.3, 1.6, 1.1, 0.9, 0.7];
   return {
     name: faker.person.fullName(),
     phoneNumber: createRandomPhoneNumber(),
     role: "Employee",
     location: cities[randomCities],
-    salary: faker.finance.amount(50000, 100000, 0),
+    salary: faker.finance.amount(50000, 100000, 0) * salaries[randomCities],
     email: faker.internet.email(),
     password: faker.internet.password(),
     managerID: managerIDs[randomManager],
@@ -69,12 +72,13 @@ function createRandomManager() {
     "Phoenix",
   ];
   const randomCities = Math.floor(Math.random() * cities.length);
+  const salaries = [1.3, 1.6, 1.1, 0.9, 0.7];
   return {
     name: faker.person.fullName(),
     phoneNumber: createRandomPhoneNumber(),
     role: "Manager",
     location: cities[randomCities],
-    salary: faker.finance.amount(100000, 250000, 0),
+    salary: faker.finance.amount(100000, 250000, 0) * salaries[randomCities],
     email: faker.internet.email(),
     password: faker.internet.password(),
   };
@@ -89,12 +93,13 @@ function createRandomHr() {
     "Phoenix",
   ];
   const randomCities = Math.floor(Math.random() * cities.length);
+  const salaries = [1.3, 1.6, 1.1, 0.9, 0.7];
   return {
     name: faker.person.fullName(),
     phoneNumber: createRandomPhoneNumber(),
     role: "Hr",
     location: cities[randomCities],
-    salary: faker.finance.amount(100000, 150000, 0),
+    salary: faker.finance.amount(100000, 150000, 0) * salaries[randomCities],
     email: faker.internet.email(),
     password: faker.internet.password(),
   };
