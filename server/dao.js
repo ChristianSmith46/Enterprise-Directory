@@ -174,7 +174,7 @@ module.exports = {
     console.log({ data });
     // Spawn a child process to execute the predict.py script
     // The Python binary name might be different on your machine. Just "python" for example.
-    const pythonScript = spawn("python", ["predict.py"]);
+    const pythonScript = spawn("py", ["predict.py"]);
 
     // Send the data to the predict.py script via stdin
     pythonScript.stdin.write(data);
