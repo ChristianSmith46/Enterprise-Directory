@@ -99,12 +99,21 @@ module.exports = {
   },
   getDirectReports: async (req, res) => {
     try {
-      const { _id } = req.user;
-      const directReports = await User.find(
-        { managerID: _id },
-        { password: 0, __v: 0 }
-      );
-      res.send({ success: true, directReports });
+      const { _id, role } = req.user;
+      if(role === "Manager"){
+        const directReports = await User.find(
+            { managerID: _id },
+            { password: 0, __v: 0 }
+          );
+          res.send({ success: true, directReports });
+      } else if (role === "Hr") {
+        const directReports = await User.find({},
+            { password: 0, __v: 0 }
+          );
+          res.send({ success: true, directReports });
+      } else {
+        res.send({ success: false, error: "No Employees Below you" });
+      }
     } catch (err) {
       console.error(err);
       res.status(500).send({ error: "Server error" });
@@ -165,7 +174,7 @@ module.exports = {
     console.log({ data });
     // Spawn a child process to execute the predict.py script
     // The Python binary name might be different on your machine. Just "python" for example.
-    const pythonScript = spawn("python", ["predict.py"]);
+    const pythonScript = spawn("python3", ["predict.py"]);
 
     // Send the data to the predict.py script via stdin
     pythonScript.stdin.write(data);
