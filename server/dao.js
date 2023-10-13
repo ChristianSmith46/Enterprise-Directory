@@ -186,7 +186,7 @@ module.exports = {
         console.log({ prediction });
 
         // Return the predictions as the response
-        res.send({success: true, prediction: prediction[0]});
+        res.send({ success: true, prediction: prediction[0] });
       } else {
         // Return an error response
         res.status(500).json({ error: "Prediction failed" });
