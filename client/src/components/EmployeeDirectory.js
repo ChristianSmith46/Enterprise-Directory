@@ -19,10 +19,6 @@ function EmployeeDirectory() {
       .then((data) => setEmployees(data.directReports));
   }, [navigate]);
 
-  const formatNumberWithCommas = (number) => {
-    return number.toLocaleString();
-  };
-
   return (
     <Container className="py-5">
       {employees.length > 0 &&
@@ -73,7 +69,8 @@ function EmployeeDirectory() {
                           <Badge bg="warning" className="me-2">
                             Salary
                           </Badge>{" "}
-                          {"$" + formatNumberWithCommas(employee.salary)}
+                          {"$" +
+                            Math.round(employee.salary).toLocaleString("en-US")}
                         </Card.Body>
                       </Card>
                       <Card bg="light" className="mt-3">

@@ -7,14 +7,18 @@ import {
   Col,
   Card,
   Alert,
+  Spinner,
 } from "react-bootstrap";
 
 function SalaryPredictor() {
   const [role, setRole] = useState("");
   const [location, setLocation] = useState("");
   const [predictedSalary, setPredictedSalary] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const getPredictedSalary = async () => {
+    setIsLoading(true);
+
     try {
       const response = await fetch("/api/predictsalary", {
         method: "POST",
@@ -27,6 +31,8 @@ function SalaryPredictor() {
       setPredictedSalary(data.prediction);
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -75,11 +81,19 @@ function SalaryPredictor() {
                 >
                   Predict Salary
                 </Button>
-                {predictedSalary && (
+                {isLoading ? (
+                  <div className="text-center">
+                    <Spinner animation="border" role="status" variant="primary">
+                      <span className="sr-only">Loading...</span>
+                    </Spinner>
+                    <div className="mt-3">AI Generating Salary!</div>
+                  </div>
+                ) : predictedSalary ? (
                   <Alert variant="success" className="mt-3 shadow-sm">
-                    Predicted Salary: {"$" + Math.round(predictedSalary)}
+                    Predicted Salary:{" "}
+                    {"$" + Math.round(predictedSalary).toLocaleString("en-US")}
                   </Alert>
-                )}
+                ) : null}
               </Form>
             </Card.Body>
           </Card>
