@@ -15,7 +15,7 @@ function SalaryPredictor() {
         body: JSON.stringify({ role, location }),
       });
       const data = await response.json();
-      setPredictedSalary(data.salary);
+      setPredictedSalary(data.prediction);
     } catch (error) {
       console.error(error);
     }
