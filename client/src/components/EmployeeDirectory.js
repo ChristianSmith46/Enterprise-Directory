@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Row, Col, Card, Badge } from "react-bootstrap";
+import Search from "./Search";
 
 function EmployeeDirectory() {
   const navigate = useNavigate();
@@ -21,6 +22,7 @@ function EmployeeDirectory() {
 
   return (
     <Container className="py-5">
+      <Search setEmployees={setEmployees} />
       {employees.length > 0 &&
         employees.map((employee) => (
           <Row key={employee._id} className="mb-4">
